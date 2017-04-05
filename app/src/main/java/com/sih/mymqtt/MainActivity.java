@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -30,11 +29,11 @@ public class MainActivity extends AppCompatActivity implements MqttCallback {
 
     private MqttAndroidClient mqttAndroidClient;
 
-    private final String serverUri = "tcp://ssadata.iptime.org:1883";
-    private String clientId = "sih";
-    private final String subscriptionTopic = "test";
-    private final String publishTopic = "test";
-    private final String publishMessage = "Hello SKCOMMS!";
+    private final String serverUri = "";
+    private String clientId = "";
+    private final String subscriptionTopic = "";
+    private final String publishTopic = "";
+    private final String publishMessage = "Hello MQTT!";
 
     private EditText etMessage;
     private Button btSend;
@@ -42,7 +41,6 @@ public class MainActivity extends AppCompatActivity implements MqttCallback {
     private InputMethodManager imm;
 
     private boolean isSend = false;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,7 +89,6 @@ public class MainActivity extends AppCompatActivity implements MqttCallback {
 
         try {
             mqttAndroidClient.connect(mqttConnectOptions, null, new IMqttActionListener() {
-
                 @Override
                 public void onSuccess(IMqttToken asyncActionToken) {
                     subscribeToTopic();
@@ -110,14 +107,12 @@ public class MainActivity extends AppCompatActivity implements MqttCallback {
     private void addToHistory(String mainText) {
         System.out.println("LOG: " + mainText);
         mAdapter.add(mainText);
-        Snackbar.make(findViewById(android.R.id.content), mainText, Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show();
+        Snackbar.make(findViewById(android.R.id.content), mainText, Snackbar.LENGTH_LONG).setAction("Action", null).show();
     }
 
     public void subscribeToTopic() {
         try {
             mqttAndroidClient.subscribe(subscriptionTopic, 0, null, new IMqttActionListener() {
-
                 @Override
                 public void onSuccess(IMqttToken asyncActionToken) {
                     addToHistory("Subscribed!");
@@ -145,6 +140,7 @@ public class MainActivity extends AppCompatActivity implements MqttCallback {
     @Override
     public void connectionLost(Throwable cause) {
         addToHistory("The Connection was lost.");
+        cause.printStackTrace();
     }
 
     @Override
